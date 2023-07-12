@@ -1,7 +1,7 @@
 """
-Wanderson Soares dos Santos - 10-07-2023
-Script Developed with Selenium with the capacity of
-make automatizaded conections
+Wanderson Soares dos Santos - UTF-8 - 10-07-2023
+Selenium script developed with the capacity of make automatic
+new connections on linkedin
 """
 import time
 from selenium import webdriver
