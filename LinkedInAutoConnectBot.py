@@ -14,10 +14,10 @@ driver.get("https://br.linkedin.com/")
 
 time.sleep(5)
 pesquisar = driver.find_element(By.ID, 'session_key')
-pesquisar.send_keys('email') # put your e-mail
+pesquisar.send_keys('wanderson14117@gmail.com') # put your e-mail
 
 senha = driver.find_element(By.ID, 'session_password')
-senha.send_keys('password') # put your password
+senha.send_keys('w99134823') # put your password
 
 button = driver.find_element(By.CSS_SELECTOR, '[data-id="sign-in-form__submit-btn"]')
 button.click()
@@ -25,7 +25,7 @@ button.click()
 time.sleep(20) # time to pass through authentication, if it's necessary
 
 search = driver.find_element(By.CLASS_NAME, 'search-global-typeahead__input')
-search.send_keys('python developer flask')
+search.send_keys('Desenvolvedor Python backend')
 # put in the send keys above which interest you want to research
 search.send_keys(Keys.ENTER)
 
@@ -38,14 +38,13 @@ time.sleep(2)
 people = driver.find_elements(By.XPATH, "//li[@class='reusable-search__result-container']")
 
 for person in people:
-    name = person.find_element(By.XPATH, ".//span[@dir='ltr']//span[@aria-hidden='true']")
-    # pegar o nome
-    name = name.text.split()
-    name = name[0]
-
-
     text_span = person.find_element(By.XPATH, ".//span[@class='artdeco-button__text']")
     if text_span.text == 'Conectar':
+        name = person.find_element(By.XPATH, ".//span[@dir='ltr']//span[@aria-hidden='true']")
+        # pegar o nome
+        name = name.text.split()
+        name = name[0]
+
         conect_button = person.find_element(By.XPATH, ".//button")
 
         conect_button.click()
@@ -56,18 +55,24 @@ for person in people:
         # Seleciona o botão Adicionar Nota
         note.click()
 
+        time.sleep(1)
+
         custom_message = driver.find_element(By.XPATH, "//textarea[@id='custom-message']")
         # select the custom message textarea
 
+        time.sleep(1)
+
         custom_message.send_keys(f'Olá {name}, tudo bem? '
         'Eu vi que temos interesses em comum, e seria um prazer estar conectado com você no '
-        'LinkedIn. Agradeço a atenção.')
+        'LinkedIn. Agradeço a atenção, abraço.')
         # put in the send_keys above which message do you want to send to your new connections
+
+        time.sleep(1)
 
         send = driver.find_element(By.XPATH, "//button[@aria-label='Enviar agora']")
         send.click()
 
-        time.sleep(1)
+        time.sleep(5)
 
 driver.get('https://www.linkedin.com/m/logout/')
 # log out of linkedin
