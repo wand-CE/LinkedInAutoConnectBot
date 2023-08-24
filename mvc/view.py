@@ -1,5 +1,5 @@
 import customtkinter
-from controller import BotController
+from mvc.controller import BotController
 
 class Bot(customtkinter.CTk):
     """Cria a classe Bot herdando da super classe customtkinter.CTk"""

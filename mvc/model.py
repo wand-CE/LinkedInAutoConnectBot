@@ -3,6 +3,8 @@ import json
 import os
 from re import match
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
@@ -33,7 +35,8 @@ class Check_data:
 
 class LinkedInBot:
     def __init__(self, num_of_connections):
-        self.driver = webdriver.Chrome()
+        self.service = Service(ChromeDriverManager().install())
+        self.driver = webdriver.Chrome(service=self.service)
         self.actual_page = 1
         self.num_of_connections = int(num_of_connections)
         self.counter = 0
@@ -77,7 +80,7 @@ class LinkedInBot:
                     text_span = person.find_element(By.XPATH, ".//span[@class='artdeco-button__text']")
                     if 'Conectar' in text_span.text:
                         name = person.find_element(By.XPATH, "./../../..//span[@dir='ltr']//span[@aria-hidden='true']")
-                        
+
                         name = name.text.split()
                         name = name[0]
 
@@ -97,7 +100,7 @@ class LinkedInBot:
                     break
             self.actual_page += 1
             time.sleep(10)
-            page = self.driver.find_element(By.XPATH, f'//li[@data-test-pagination-page-btn="{self.actual_page}"]')            
+            page = self.driver.find_element(By.XPATH, f'//li[@data-test-pagination-page-btn="{self.actual_page}"]')
             page.click()
 
     def select_note(self, custom_message, name):

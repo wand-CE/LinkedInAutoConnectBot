@@ -1,5 +1,5 @@
 import threading
-from model import ConfigManager, Check_data, TranslationModel, LinkedInBot
+from mvc.model import ConfigManager, Check_data, TranslationModel, LinkedInBot
 from tkinter.messagebox import showinfo
 
 
