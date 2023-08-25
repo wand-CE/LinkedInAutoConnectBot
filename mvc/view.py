@@ -57,7 +57,7 @@ class Bot(customtkinter.CTk):
         self.start.place(x=self.position_x, y=470, w=100)
 
         self.stop = customtkinter.CTkButton(self.principal, text='STOP', font=('Arial', self.font_size), fg_color="red",
-                              hover_color="darkred")
+                              hover_color="darkred", state='disabled', command=lambda:[self.controller.loggin_out(), self.controller.widgets_state()])
         self.stop.place(x=self.position_x + 125, y=470, w=100)
 
         self.theme = customtkinter.CTkSwitch(self.principal, text="Dark Mode",

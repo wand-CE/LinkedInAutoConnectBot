@@ -10,6 +10,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
 
 class Check_data:
     @classmethod
@@ -72,6 +73,7 @@ class LinkedInBot:
 
     def connect(self, custom_message):
         while self.num_of_connections > self.counter:
+            self.scroll_page(duration=6)
             time.sleep(5)
             people = self.driver.find_elements(By.XPATH, "//li[@class='reusable-search__result-container']//*[text()='Conectar']/parent::*")
             for person in people:
@@ -98,10 +100,16 @@ class LinkedInBot:
                     pass
                 if self.num_of_connections == self.counter:
                     break
+
             self.actual_page += 1
-            time.sleep(10)
-            page = self.driver.find_element(By.XPATH, f'//li[@data-test-pagination-page-btn="{self.actual_page}"]')
-            page.click()
+            time.sleep(5)
+            pages = self.driver.find_elements(By.CLASS_NAME, 'artdeco-pagination__indicator--number')
+            for page in pages:
+                if str(self.actual_page) in page.text:
+                    page.click()
+                    break
+            time.sleep(5)
+
 
     def select_note(self, custom_message, name):
         time.sleep(1)
@@ -120,7 +128,26 @@ class LinkedInBot:
 
     def logout(self):
         self.driver.get('https://www.linkedin.com/m/logout/')
+        time.sleep(3)
         self.driver.quit()
+
+    def scroll_page(self, duration = 5):
+        start = time.time()
+
+        init_scroll = 0
+        final_scroll = 1000
+
+        while True:
+            self.driver.execute_script(f"window.scrollTo({init_scroll}, {final_scroll})")
+            init_scroll = final_scroll
+            final_scroll += 1000
+            time.sleep(3)
+
+            end = time.time()
+
+            if round(end - start) > duration:
+                break
+
 
 
 class ConfigManager:
