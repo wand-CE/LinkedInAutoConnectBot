@@ -37,7 +37,7 @@ class BotController:
     def init_bot(self, email, password, search, note, num_of_connections):
         self.widgets_state()
         session = LinkedInBot(num_of_connections)
-        self.loggin_out = session.logout
+        self.loggin_out = lambda: [self.widgets_state(), session.logout()]
         session.start_bot()
         session.login(email, password)
         session.search(search)
