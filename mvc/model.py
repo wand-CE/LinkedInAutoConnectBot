@@ -100,16 +100,15 @@ class LinkedInBot:
                     pass
                 if self.num_of_connections == self.counter:
                     break
-
-            self.actual_page += 1
-            time.sleep(5)
-            pages = self.driver.find_elements(By.CLASS_NAME, 'artdeco-pagination__indicator--number')
-            for page in pages:
-                if str(self.actual_page) in page.text:
-                    page.click()
-                    break
-            time.sleep(5)
-
+                elif person == people[-1]:
+                    self.actual_page += 1
+                    time.sleep(5)
+                    pages = self.driver.find_elements(By.CLASS_NAME, 'artdeco-pagination__indicator--number')
+                    for page in pages:
+                        if str(self.actual_page) in page.text:
+                            page.click()
+                            break
+                    time.sleep(5)
 
     def select_note(self, custom_message, name):
         time.sleep(1)

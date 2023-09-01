@@ -1,5 +1,7 @@
 import customtkinter
+from PIL import Image
 from mvc.controller import BotController
+
 
 class Bot(customtkinter.CTk):
     """Cria a classe Bot herdando da super classe customtkinter.CTk"""
@@ -18,6 +20,8 @@ class Bot(customtkinter.CTk):
         self.main_color = customtkinter.StringVar(value=self.controller.config['theme'])
         self.title('LinkedInAutoConnectBot')
         customtkinter.set_appearance_mode(self.main_color.get())
+
+
         self.email_lab = customtkinter.CTkLabel(self.principal, text='Email:', font=('Arial', self.font_size))
         self.email_lab.place(x=self.position_x, y=40, h=21)
 
@@ -38,7 +42,12 @@ class Bot(customtkinter.CTk):
         self.email.place(x=self.position_x, y=60, h=self.altura_entrys, w=460)
 
         self.password = customtkinter.CTkEntry(self.principal, font=('Arial', self.font_size), show='*', placeholder_text='Sua Senha')
-        self.password.place(x=90, y=102, h=self.altura_entrys, w=366)
+        self.password.place(x=90, y=102, h=self.altura_entrys, w=320)
+
+        self.see_password = customtkinter.CTkButton(self.principal, font=('Arial', self.font_size), text='', fg_color='#ABABAB', hover_color='#6E6E6E',
+                                                    image=customtkinter.CTkImage(Image.open('images/eye.png')),
+                                                    command=lambda: [self.controller.show_password(self.password, self.see_password)])
+        self.see_password.place(x=350, y=102, h=self.altura_entrys, w=40)
 
         self.profession = customtkinter.CTkEntry(self.principal, font=('Arial', self.font_size))
         self.profession.place(x=self.position_x, y=177, h=self.altura_entrys, w=460)

@@ -2,13 +2,15 @@ import threading
 import re
 from mvc.model import ConfigManager, Check_data, TranslationModel, LinkedInBot
 from tkinter.messagebox import showinfo
-
+from customtkinter import CTkImage
+from PIL import Image
 
 class BotController:
     def __init__(self, view):
         self.view = view
         self.config = ConfigManager.load_config()
         self.state = True
+        self.eye_icon = "images/eye.png"
         self.loggin_out = ""
 
     def check_elements(self, email, password, search, note, num_of_connections):
@@ -72,3 +74,11 @@ class BotController:
         del lista
 
         self.state = not self.state
+
+    def show_password(self, widget_password, eye_password):
+        self.eye_icon = "images/eye.png" if self.eye_icon == "images/eye-slash.png" else "images/eye-slash.png"
+        eye = CTkImage(Image.open(self.eye_icon),
+                                  size=(20, 20))
+        widget_password.configure(
+            show='' if '*' in widget_password.cget('show') else '*')
+        eye_password.configure(image=eye)
