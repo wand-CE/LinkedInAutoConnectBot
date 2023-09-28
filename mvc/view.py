@@ -6,7 +6,6 @@ from mvc.controller import BotController
 class Bot(customtkinter.CTk):
     """Cria a classe Bot herdando da super classe customtkinter.CTk"""
     font_size = 15
-    altura_entrys = 40
     position_x = 15
 
     def __init__(self):
@@ -23,38 +22,38 @@ class Bot(customtkinter.CTk):
 
 
         self.email_lab = customtkinter.CTkLabel(self.principal, text='Email:', font=('Arial', self.font_size))
-        self.email_lab.place(x=self.position_x, y=40, h=21)
+        self.email_lab.place(x=self.position_x, y=37)
 
         self.password_lab = customtkinter.CTkLabel(self.principal, text='Password:', font=('Arial', self.font_size))
-        self.password_lab.place(x=self.position_x, y=110, h=21)
+        self.password_lab.place(x=self.position_x, y=102)
 
         self.prof_lab = customtkinter.CTkLabel(self.principal, text='Profession to Search:', font=('Arial', self.font_size))
         self.prof_lab.place(x=self.position_x, y=145)
 
         self.message_lab = customtkinter.CTkLabel(self.principal, text='Custom Message to send: ', font=('Arial', self.font_size))
-        self.message_lab.place(x=self.position_x, y=220, h=21)
+        self.message_lab.place(x=self.position_x, y=220)
 
         self.connect_lab = customtkinter.CTkLabel(self.principal, text='Number of Connections: ', font=('Arial', self.font_size))
-        self.connect_lab.place(x=self.position_x, y=420, h=21)
+        self.connect_lab.place(x=self.position_x, y=420)
 
 
-        self.email = customtkinter.CTkEntry(self.principal, font=('Arial', self.font_size), placeholder_text='Seu E-mail')
-        self.email.place(x=self.position_x, y=60, h=self.altura_entrys, w=460)
+        self.email = customtkinter.CTkEntry(self.principal, font=('Arial', self.font_size), placeholder_text='Your E-mail')
+        self.email.place(x=self.position_x, y=60, w=375)
 
-        self.password = customtkinter.CTkEntry(self.principal, font=('Arial', self.font_size), show='*', placeholder_text='Sua Senha')
-        self.password.place(x=90, y=102, h=self.altura_entrys, w=320)
+        self.password = customtkinter.CTkEntry(self.principal, font=('Arial', self.font_size), show='*', placeholder_text='Your Password')
+        self.password.place(x=90, y=102,  w=260)
 
         self.see_password = customtkinter.CTkButton(self.principal, font=('Arial', self.font_size), text='', fg_color='#ABABAB', hover_color='#6E6E6E',
                                                     image=customtkinter.CTkImage(Image.open('images/eye.png')),
                                                     command=lambda: [self.controller.show_password(self.password, self.see_password)])
-        self.see_password.place(x=350, y=102, h=self.altura_entrys, w=40)
+        self.see_password.place(x=355, y=102,  w=35)
 
         self.profession = customtkinter.CTkEntry(self.principal, font=('Arial', self.font_size))
-        self.profession.place(x=self.position_x, y=177, h=self.altura_entrys, w=460)
+        self.profession.place(x=self.position_x, y=177,  w=375)
 
 
         self.message = customtkinter.CTkTextbox(self.principal, font=('Arial', self.font_size))
-        self.message.place(x=self.position_x, y=245, h=200, w=460)
+        self.message.place(x=self.position_x, y=245, h=165, w=375)
 
 
         self.start = customtkinter.CTkButton(self.principal, text='START', font=('Arial', self.font_size),
@@ -76,7 +75,7 @@ class Bot(customtkinter.CTk):
         self.theme.place(x=self.position_x, y=15)
 
         self.optionmenu = customtkinter.CTkOptionMenu(self.principal, values=[f"{i}" for i in range(1, 51) if not i % 5])
-        self.optionmenu.place(x=self.position_x + 180, y=417, w=70)
+        self.optionmenu.place(x=self.position_x + 170, y=420, w=60)
 
         self.elements = (self.theme, self.email_lab, self.password_lab,
                          self.email,self.password, self.prof_lab,
@@ -88,6 +87,6 @@ class Bot(customtkinter.CTk):
         self.language = customtkinter.CTkOptionMenu(self.principal, values=sorted(["pt-BR", "en-US"]),
                                                     command=lambda _: [self.controller.change_language(self.language.get(), self.elements)])
         self.language.set(self.controller.config['language'])
-        self.language.place(x=self.position_x + 180, y=15, w=90)
+        self.language.place(x=self.position_x + 180, y=15, w=80)
 
         self.mainloop()
