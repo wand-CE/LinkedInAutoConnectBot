@@ -64,10 +64,6 @@ class Bot(customtkinter.CTk):
                                                                                             self.optionmenu.get()))
         self.start.place(x=self.position_x, y=470, w=100)
 
-        self.stop = customtkinter.CTkButton(self.principal, text='STOP', font=('Arial', self.font_size), fg_color="red",
-                              hover_color="darkred", state='disabled', command=lambda:[self.controller.loggin_out()])
-        self.stop.place(x=self.position_x + 125, y=470, w=100)
-
         self.theme = customtkinter.CTkSwitch(self.principal, text="Dark Mode",
                                 command=lambda : [customtkinter.set_appearance_mode(self.main_color.get()),
                                                    self.controller.change_theme(self.main_color.get())],
@@ -79,14 +75,29 @@ class Bot(customtkinter.CTk):
 
         self.elements = (self.theme, self.email_lab, self.password_lab,
                          self.email,self.password, self.prof_lab,
-                         self.message_lab, self.connect_lab, self.start,
-                         self.stop)
+                         self.message_lab, self.connect_lab, self.start)
 
         self.controller.change_language(self.controller.config['language'], self.elements)
 
         self.language = customtkinter.CTkOptionMenu(self.principal, values=sorted(["pt-BR", "en-US"]),
                                                     command=lambda _: [self.controller.change_language(self.language.get(), self.elements)])
         self.language.set(self.controller.config['language'])
-        self.language.place(x=self.position_x + 180, y=15, w=80)
+        self.language.place(x=self.position_x + 180, y=15, w=80)        
 
+        self.connection_screen()
         self.mainloop()
+        
+
+    def connection_screen(self):
+        janela_secundaria = customtkinter.CTkToplevel(self)
+        janela_secundaria.title("Connections")
+        janela_secundaria.geometry('300x300')
+        janela_secundaria.grab_set()
+        message = customtkinter.CTkTextbox(janela_secundaria, font=('Arial', self.font_size))
+        message.place(x=15, y=15)
+        self.update_message(message)
+    
+    def update_message(self, message):
+        message.configure(state='normal')
+        message.insert(customtkinter.END ,'texto simples')
+        message.configure(state='disabled')

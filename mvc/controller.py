@@ -34,6 +34,7 @@ class BotController:
             showinfo(message="Nota vazia")
             return ''
         process = threading.Thread(target=self.init_bot,args=(email.strip(), password, search, note.strip(), num_of_connections))
+        process.daemon = True
         process.start()
 
     def init_bot(self, email, password, search, note, num_of_connections):
@@ -67,8 +68,9 @@ class BotController:
                     if '5' in child.cget('values'):
                         child.configure(state="disabled" if self.state else 'normal')
                 elif 'button' in str(child):
-                    buttons.append(child)
-                    states.append(child.cget('state'))
+                    if child.cget('text') != '':
+                        buttons.append(child)
+                        states.append(child.cget('state'))
         states = states[::-1]
         lista = [button.configure(state=states[i]) for i, button in enumerate(buttons)]
         del lista

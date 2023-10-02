@@ -183,7 +183,7 @@ class TranslationModel:
             'custom message': "Custom Message to send:",
             'num_connections': "Number of Connections:",
             'start_btn' : 'START',
-            'stop_btn' : 'STOP',
+            # desativado por enquanto 'stop_btn' : 'STOP',
         },
         'pt-BR': {
             'theme': "Modo Escuro",
@@ -195,7 +195,7 @@ class TranslationModel:
             'custom message': "Mensagem customizada:",
             'num_connections': "Numero de conexões:",
             'start_btn' : 'INICIAR',
-            'stop_btn' : 'PARAR',
+            # desativado por enquanto 'stop_btn' : 'PARAR', 
         },
     }
 
