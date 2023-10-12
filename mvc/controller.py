@@ -1,15 +1,25 @@
 import threading
-from mvc.model import ConfigManager, Check_data, TranslationModel, LinkedInBot
 from tkinter.messagebox import showinfo
 from customtkinter import CTkImage
 from PIL import Image
+from mvc.model import ConfigManager, Check_data, TranslationModel, LinkedInBot, resource_path
+
+
+eye_img = resource_path("images\\eye.png")
+eye_slash = resource_path("images\\eye_slash.png")
+icon = resource_path("images\\meu_icon.ico")
 
 
 class BotController:
+
+    should_stop = ""
+
     def __init__(self):
         self.bot = None
+        self.images = [eye_img, eye_slash]
         self.config = ConfigManager.load_config()
-        self.eye_icon = "images/eye.png"
+        self.app_icon = icon
+        self.eye_icon = self.images[0]
         self.loggin_out = ""
         self.password_visible = False
 
@@ -45,6 +55,7 @@ class BotController:
         session = LinkedInBot(num_of_connections, self.config['language'])
         session.add_observer(view)
         self.loggin_out = lambda: [session.logout()]
+        self.should_stop = lambda: setattr(session, 'should_stop', True)
         try:
             session.start_bot()
             session.login(email, password)
@@ -64,10 +75,14 @@ class BotController:
         ConfigManager.save_config(self.config)
 
     def show_password(self, widget_password, eye_password):
-        self.eye_icon = "images/eye.png" if self.eye_icon == "images/eye-slash.png" else "images/eye-slash.png"
+        self.eye_icon = self.images[0] if self.eye_icon == self.images[1] else self.images[1]
         eye = CTkImage(Image.open(self.eye_icon),
                        size=(20, 20))
 
         self.password_visible = not self.password_visible
         widget_password.configure(show='' if self.password_visible else '*')
         eye_password.configure(image=eye)
+
+    def stop(self):
+        self.should_stop()
+        return True

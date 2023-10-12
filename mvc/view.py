@@ -1,3 +1,4 @@
+import time
 import customtkinter
 from PIL import Image
 from mvc.controller import BotController
@@ -19,6 +20,8 @@ class Bot(customtkinter.CTk):
         self.geometry('400x525')
         self.resizable(False, False)
         self.configure()
+        self.iconbitmap(self.controller.app_icon)
+
         self.main_color = customtkinter.StringVar(
             value=self.controller.config['theme'])
         self.title('LinkedInAutoConnectBot')
@@ -53,7 +56,7 @@ class Bot(customtkinter.CTk):
         self.password.place(x=self.position_x + 75, y=102)
 
         self.see_password = customtkinter.CTkButton(self.principal, font=('Arial', self.font_size), text='', fg_color='#ABABAB', hover_color='#6E6E6E',
-                                                    width=35, image=customtkinter.CTkImage(Image.open('images/eye.png')),
+                                                    width=35, image=customtkinter.CTkImage(Image.open(self.controller.images[0])),
                                                     command=lambda: [self.controller.show_password(self.password, self.see_password)])
         self.see_password.place(x=355, y=102)
 
@@ -100,18 +103,36 @@ class Bot(customtkinter.CTk):
         self.mainloop()
 
     def connection_screen(self):
+        lang_stop_button = {
+            "en-US": "STOP",
+            "pt-BR": "PARAR",
+        }
+
         janela_secundaria = customtkinter.CTkToplevel(self)
         janela_secundaria.title("Connections")
         janela_secundaria.geometry('400x400')
+        janela_secundaria.resizable(False, False)
+
+        janela_secundaria.after(230, lambda: janela_secundaria.iconbitmap(
+            self.controller.app_icon))
 
         janela_secundaria.grab_set()
+
         message = customtkinter.CTkTextbox(
             janela_secundaria, font=('Arial', self.font_size), state='disabled')
         message.pack(padx=10, pady=5, fill=customtkinter.BOTH, expand=True)
 
-        stop = customtkinter.CTkButton(janela_secundaria, text='STOP', width=100, font=('Arial', self.font_size), fg_color="#B22222",
-                                       hover_color="#800000", command=lambda: [self.controller.loggin_out()])
+        stop = customtkinter.CTkButton(janela_secundaria, text=lang_stop_button[self.controller.config['language']],
+                                       width=100, font=('Arial', self.font_size), fg_color="#B22222",
+                                       hover_color="#800000", command=lambda: [
+                                           self.controller.stop(),
+                                           stop.configure(state='disabled'),
+                                           janela_secundaria.protocol("WM_DELETE_WINDOW",
+                                                                      janela_secundaria.destroy)])
         stop.pack(pady=15)
+
+        janela_secundaria.protocol(
+            "WM_DELETE_WINDOW", lambda: '')
 
         self.connections_info = message
         self.temp_stop_button = stop

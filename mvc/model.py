@@ -1,25 +1,34 @@
 import time
 import json
 import os
+import sys
+from subprocess import CREATE_NO_WINDOW
 from re import match
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    base_path = getattr(sys, '_MEIPASS', os.path.dirname(
+        os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
 
 
 messages_to_show = {
     "en-US": {
         "starting_bot": "Starting session...\n",
         "login": "Trying to login on account...\n",
-        "logged": "Logged on account!\n",
+        "logged": "Logged on account!\n\n",
         "search": "Searching",
-        "connection": "Send invite to ",
-        "num_connect": ["out of", "invites made"],
+        "connection": "Invite sent to ",
+        "num_connect": ["out of", "invites made\n"],
         "logout": "Session ended.\n",
     },
     "pt-BR": {
@@ -143,6 +152,8 @@ class LinkedInBot(Observable):
     def __init__(self, num_of_connections, language):
         super().__init__()
         self.service = Service(ChromeDriverManager().install())
+        self.service.creation_flags = CREATE_NO_WINDOW
+
         self.driver = webdriver.Chrome(service=self.service)
 
         self.driver.maximize_window()
@@ -158,17 +169,26 @@ class LinkedInBot(Observable):
         self.counter = 0
         # self.message = ""
         self.language = language
+        self.should_stop = False
 
     def add_message(self, new_message):
         # self.message += new_message
         self.notify_observers(new_message)
 
     def start_bot(self):
+        if self.should_stop:
+            return
+
         self.add_message(messages_to_show[self.language]["starting_bot"])
         self.driver.get("https://br.linkedin.com/")
 
+        if self.should_stop:
+            return
+
     def login(self, email, password):
         try:
+            if self.should_stop:
+                return
             self.add_message(messages_to_show[self.language]["login"])
             user = self.driver.find_element(By.ID, "session_key")
             password_element = self.driver.find_element(
@@ -183,9 +203,13 @@ class LinkedInBot(Observable):
         user.send_keys(email)
         password_element.send_keys(password)
         time.sleep(2)
+        if self.should_stop:
+            return
         button.click()
 
     def search(self, search_term):
+        if self.should_stop:
+            return
         search = WebDriverWait(self.driver, 20).until(
             EC.presence_of_element_located((By.CLASS_NAME, "search-global-typeahead")))
         search.click()
@@ -197,6 +221,9 @@ class LinkedInBot(Observable):
         self.add_message(messages_to_show[self.language]["logged"])
         self.add_message(
             f'{messages_to_show[self.language]["search"]} {search_term}\n')
+
+        if self.should_stop:
+            return
         search.send_keys(Keys.ENTER)
 
         people_tab = WebDriverWait(self.driver, 10).until(
@@ -204,14 +231,23 @@ class LinkedInBot(Observable):
         people_tab.click()
 
     def connect(self, custom_message):
+        if self.should_stop:
+            return
         while self.num_of_connections > self.counter:
+            if self.should_stop:
+                return
             self.scroll_page(duration=6)
             time.sleep(5)
+            if self.should_stop:
+                return
+
             people = self.driver.find_elements(
                 By.XPATH, "//li[@class='reusable-search__result-container']//*[text()='Conectar']/parent::*")
             for person in people:
                 try:
                     time.sleep(5)
+                    if self.should_stop:
+                        return
                     text_span = person.find_element(
                         By.XPATH, ".//span[@class='artdeco-button__text']")
                     if "Conectar" in text_span.text:
@@ -244,6 +280,8 @@ class LinkedInBot(Observable):
                 if person == people[-1]:
                     self.actual_page += 1
                     time.sleep(5)
+                    if self.should_stop:
+                        return
                     pages = self.driver.find_elements(
                         By.CLASS_NAME, 'artdeco-pagination__indicator--number')
                     for page in pages:
@@ -251,6 +289,8 @@ class LinkedInBot(Observable):
                             page.click()
                             break
                     time.sleep(5)
+                    if self.should_stop:
+                        return
 
     def select_note(self, custom_message, name):
         time.sleep(1)
