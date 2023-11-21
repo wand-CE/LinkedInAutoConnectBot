@@ -135,6 +135,7 @@ class Bot(customtkinter.CTk):
             "WM_DELETE_WINDOW", lambda: '')
 
         self.connections_info = message
+        self.janela_secundaria_current = janela_secundaria
         self.temp_stop_button = stop
 
     def update_message(self, message_to_update):
@@ -144,3 +145,5 @@ class Bot(customtkinter.CTk):
 
     def disable_stop_button(self):
         self.temp_stop_button.configure(state='disabled')
+        self.janela_secundaria_current.protocol("WM_DELETE_WINDOW",
+                                                self.janela_secundaria_current.destroy)

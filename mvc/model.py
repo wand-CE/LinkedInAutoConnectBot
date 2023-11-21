@@ -227,7 +227,7 @@ class LinkedInBot(Observable):
         search.send_keys(Keys.ENTER)
 
         people_tab = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, '//*[@id="search-reusables__filters-bar"]/ul/li[2]/button[text()="Pessoas"]')))
+            EC.presence_of_element_located((By.XPATH, '//*[@id="search-reusables__filters-bar"]/ul//button[text()="Pessoas"]')))
         people_tab.click()
 
     def connect(self, custom_message):
